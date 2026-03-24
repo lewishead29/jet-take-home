@@ -12,24 +12,6 @@ The project is split into two services:
 - **Frontend** — A React (Create React App) single-page application that provides the user interface.
 
 The decision to use a backend proxy rather than calling the JET API directly from the browser was done as it avoids CORS issues, keeps API consumption server-side, and provides somewhere to enforce data validation via Pydantic models.
-```
-User → React Frontend → FastAPI Backend → JET API
-                     ←  Pydantic Model ←
-```
-```
-jet-take-home/
-├── backend/
-│   ├── main.py                        # FastAPI app and route definitions
-│   ├── models/restaurant.py           # Pydantic data model
-│   ├── services/restaurant_service.py # Fetch, validation and parsing logic
-│   ├── tests/test_restaurants.py      # Pytest unit tests
-│   └── requirements.txt
-└── frontend/
-    ├── src/
-    │   ├── App.js                     # Root component and state management
-    │   └── App.css                    # Styling
-    └── package.json
-```
 
 ---
 ## Design Choices
