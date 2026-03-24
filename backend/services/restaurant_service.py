@@ -1,9 +1,18 @@
 import httpx
 from models.restaurant import Restaurant
+import re
 
 JET_API_BASE = "https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode"
 
-
+# UK Gov regex for postcodes, sourced from https://github.com/stemount/gov-uk-official-postcode-regex-helper
+UK_POSTCODE_REGEX = re.compile(
+    r'^([Gg][Ii][Rr] 0[Aa]{2})|'
+    r'((([A-Za-z][0-9]{1,2})|'
+    r'(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|'
+    r'(([A-Za-z][0-9][A-Za-z])|'
+    r'([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))'
+    r' [0-9][A-Za-z]{2})$'
+)
 
 def parse_restaurant(raw: dict) -> Restaurant:
     name = raw.get("name", "Unknown")
@@ -31,6 +40,16 @@ def parse_restaurant(raw: dict) -> Restaurant:
 
 
 async def get_restaurants_by_postcode(postcode: str) -> list[Restaurant]:
+    # Normalise to uppercase with a space before validating
+    postcode = postcode.strip().upper()
+    
+    # Re-insert space if missing to match with the Gov.uk regex
+    if ' ' not in postcode and len(postcode) > 3:
+        postcode = postcode[:-3] + ' ' + postcode[-3:]
+
+    if not UK_POSTCODE_REGEX.match(postcode):
+        raise ValueError(f"'{postcode}' is not a valid UK postcode")
+
     clean_postcode = postcode.replace(" ", "").upper()
     url = f"{JET_API_BASE}/{clean_postcode}"
     async with httpx.AsyncClient() as client:
