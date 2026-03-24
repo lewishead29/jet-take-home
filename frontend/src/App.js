@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './App.css';
 
 function App() {
   const [postcode, setPostcode] = useState('');
@@ -14,7 +15,10 @@ function App() {
 
     try {
       const res = await fetch(`http://localhost:8000/restaurants/${postcode.replace(/\s/g, '').toUpperCase()}`);
-      if (!res.ok) throw new Error('No restaurants found');
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || 'No restaurants found');
+      }
       const data = await res.json();
       setRestaurants(data);
     } catch (err) {
@@ -26,31 +30,42 @@ function App() {
 
   return (
     <div>
-      <h1>Restaurant Finder</h1>
+      <div className="header">
+        <h1>Restaurant Finder</h1>
+      </div>
 
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={postcode}
-          onChange={e => setPostcode(e.target.value)}
-          placeholder="Enter UK postcode"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
-        </button>
-      </form>
+      <div className="container">
+        <form className="search-form" onSubmit={handleSearch}>
+          <input
+            className="search-input"
+            type="text"
+            value={postcode}
+            onChange={e => setPostcode(e.target.value)}
+            placeholder="Enter a UK postcode e.g. EC4M 7RF"
+          />
+          <button className="search-button" type="submit" disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </form>
 
-      {error && <p>Error: {error}</p>}
+        {error && <div className="error">{error}</div>}
 
-      {restaurants.map((r, i) => (
-        <div key={i}>
-          <h2>{i + 1}. {r.name}</h2>
-          <p><strong>Cuisines:</strong> {r.cuisines.join(', ')}</p>
-          <p><strong>Rating:</strong> {r.rating ?? 'No rating'}</p>
-          <p><strong>Address:</strong> {r.address}</p>
-          <hr />
-        </div>
-      ))}
+        {restaurants.map((r, i) => (
+          <div className="restaurant-card" key={i}>
+            <div className="card-number">{i + 1}</div>
+            <div className="card-content">
+              <div className="card-name">{r.name}</div>
+              <div className="card-cuisines">
+                {r.cuisines.map(c => (
+                  <span className="cuisine-tag" key={c}>{c}</span>
+                ))}
+              </div>
+              <div className="card-rating">{r.rating ?? 'No rating'}</div>
+              <div className="card-address">{r.address}</div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
