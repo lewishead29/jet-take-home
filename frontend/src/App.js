@@ -1,6 +1,28 @@
 import { useState } from 'react';
 import './App.css';
 
+function StarRating({ rating }) {
+  if (rating === null || rating === undefined) {
+    return <span style={{ color: '#999', fontSize: '0.88rem' }}>No rating</span>;
+  }
+
+  const filled = Math.round(rating);
+
+  return (
+    <div className="star-rating">
+      {[1, 2, 3, 4, 5].map(star => (
+        <span
+          key={star}
+          className={star <= filled ? 'star star--filled' : 'star star--empty'}
+        >
+          ★
+        </span>
+      ))}
+      <span className="rating-number">{rating.toFixed(1)}</span>
+    </div>
+  );
+}
+
 function App() {
   const [postcode, setPostcode] = useState('');
   const [restaurants, setRestaurants] = useState([]);
@@ -41,7 +63,7 @@ function App() {
             type="text"
             value={postcode}
             onChange={e => setPostcode(e.target.value)}
-            placeholder="Enter a UK postcode e.g. EC4M 7RF"
+            placeholder="Enter a UK postcode..."
           />
           <button className="search-button" type="submit" disabled={loading}>
             {loading ? 'Searching...' : 'Search'}
@@ -49,6 +71,8 @@ function App() {
         </form>
 
         {error && <div className="error">{error}</div>}
+
+        {loading && <div className="spinner" />}
 
         {restaurants.map((r, i) => (
           <div className="restaurant-card" key={i}>
@@ -60,7 +84,7 @@ function App() {
                   <span className="cuisine-tag" key={c}>{c}</span>
                 ))}
               </div>
-              <div className="card-rating">{r.rating ?? 'No rating'}</div>
+              <StarRating rating={r.rating} />
               <div className="card-address">{r.address}</div>
             </div>
           </div>

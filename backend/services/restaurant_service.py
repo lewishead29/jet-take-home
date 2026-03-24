@@ -13,10 +13,12 @@ UK_POSTCODE_REGEX = re.compile(
     r'([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))'
     r' [0-9][A-Za-z]{2})$'
 )
+# Define the tags that are showing up as a cuisine when they are clearly not, for exclusion.
+NON_CUISINE_TAGS = {"Collect stamps", "Deals", "Cheeky Tuesday"}
 
 def parse_restaurant(raw: dict) -> Restaurant:
     name = raw.get("name", "Unknown")
-    cuisines = [c["name"] for c in raw.get("cuisines", []) if "name" in c]
+    cuisines = [c["name"] for c in raw.get("cuisines", []) if "name" in c and c["name"] not in NON_CUISINE_TAGS]
     rating_data = raw.get("rating", {})
     rating = rating_data.get("starRating") if rating_data else None
     address_data = raw.get("address", {})
