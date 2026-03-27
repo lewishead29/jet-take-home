@@ -1,5 +1,46 @@
 import { useState } from 'react';
 import './App.css';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
+function RestaurantMap({ latitude, longitude, name }) {
+  if (latitude == null || longitude == null) return null;
+  return (
+    <div className="card-map">
+      <MapContainer
+        center={[latitude, longitude]}
+        zoom={15}
+        scrollWheelZoom={false}
+        style={{ height: '180px', width: '100%' }}
+        attributionControl={false}
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <Marker position={[latitude, longitude]}>
+          <Popup>{name}</Popup>
+        </Marker>
+      </MapContainer>
+      <a
+        className="gmaps-link"
+        href={`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Get directions on Google Maps →
+      </a>
+    </div>
+  );
+}
 
 function StarRating({ rating }) {
   if (rating === null || rating === undefined) {
@@ -86,6 +127,7 @@ function App() {
               </div>
               <StarRating rating={r.rating} />
               <div className="card-address">{r.address}</div>
+              <RestaurantMap latitude={r.latitude} longitude={r.longitude} name={r.name} />
             </div>
           </div>
         ))}
