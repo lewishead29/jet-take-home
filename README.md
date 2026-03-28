@@ -105,17 +105,17 @@ npm test
 
 ## Assumptions
 
-- Assume that only postcodes are considered valid entries, ignoring outcodes.
+- Only postcodes are considered valid entries, ignoring outcodes.
 
-- Assume that users are English-speaking as it is a UK based API. No additional language support needed.
+- Users are English-speaking as it is a UK based API. No additional language support needed.
 
-- Assume that cuisine tags like 'Collect stamps', 'Deals', 'Cheeky Tuesday' aren't actually cuisines and can be left out.
+- Cuisine tags like 'Collect stamps', 'Deals', 'Cheeky Tuesday' aren't actually cuisines and can be left out.
 
-- Assume that no user authentication is needed.
+- No user authentication is needed.
 
-- Assume that the JET API URL will not change, and the data structure of the responses will remain the same.
+- The JET API URL will not change, and the data structure of the responses will remain the same.
 
-- Assume that the starRating is the value that needs to be displayed to the user.
+- The starRating is the rating value that needs to be displayed to the user.
 
 ---
 
