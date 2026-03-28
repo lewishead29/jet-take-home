@@ -34,7 +34,7 @@ Both services need to be running simultaneously. Open two terminal windows from 
 ```bash
 cd backend
 pip install -r requirements.txt
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
 ```
 
 The API will be available at `http://localhost:8000`.
@@ -73,7 +73,7 @@ To run the backend tests, do the following:
 ```bash
 cd backend
 pip install -r requirements.txt
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 ### Frontend
@@ -109,7 +109,7 @@ npm test
 
 - Assume that users are English-speaking as it is a UK based API. No additional language support needed.
 
-- Assume that cuusine tags like 'Collect stamps', 'Deals', 'Cheeky Tuesday' aren't actually cuisines and can be left out.
+- Assume that cuisine tags like 'Collect stamps', 'Deals', 'Cheeky Tuesday' aren't actually cuisines and can be left out.
 
 - Assume that no user authentication is needed.
 
@@ -139,5 +139,15 @@ npm test
 ---
 
 ## Screenshots
+
+**Desktop**
+
+![Search Page](screenshots/desktop_1.png)
+![Results](screenshots/desktop_2.png)
+
+**Mobile**
+
+![Search Page](screenshots/mobile_1.png)
+![Results](screenshots/mobile_2.png)
 
 ---
