@@ -1,4 +1,4 @@
-import React from 'react';
+// Imports
 import ReactDOM from 'react-dom/client';
 import App from './App';
 

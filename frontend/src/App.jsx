@@ -1,3 +1,4 @@
+// Imports
 import { useState } from 'react';
 import './App.css';
 import L from 'leaflet';
@@ -7,6 +8,8 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
+// When leaflet is used with Vite, the images used can get broken.
+// This fixes it with explicit imports of the icon images.
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -14,6 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+// Function to display the location of a given restaurant on an OpenStreetMap Map. Also includes a link to get directions directly through Google Maps.
 function RestaurantMap({ latitude, longitude, name }) {
   if (latitude == null || longitude == null) return null;
   return (
@@ -41,7 +45,7 @@ function RestaurantMap({ latitude, longitude, name }) {
     </div>
   );
 }
-
+// Function to determine how many stars should be shown /5.
 function StarRating({ rating }) {
   if (rating === null || rating === undefined) {
     return <span style={{ color: '#999', fontSize: '0.88rem' }}>No rating</span>;
@@ -63,13 +67,14 @@ function StarRating({ rating }) {
     </div>
   );
 }
-
+// Main App function
 function App() {
   const [postcode, setPostcode] = useState('');
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Function to handle the search bar interaction
   async function handleSearch(e) {
     e.preventDefault();
     setLoading(true);
@@ -92,6 +97,7 @@ function App() {
   }
 
   return (
+    // Layout of the page
     <div>
       <div className="header">
         <h1>Restaurant Finder</h1>

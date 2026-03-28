@@ -1,3 +1,4 @@
+# Imports
 import httpx
 from models.restaurant import Restaurant
 import re
@@ -16,9 +17,10 @@ UK_POSTCODE_REGEX = re.compile(
 # Define the tags that are showing up as a cuisine when they are clearly not, for exclusion.
 NON_CUISINE_TAGS = {"Collect stamps", "Deals", "Cheeky Tuesday", "Freebies"}
 
+# Function to take a dictionary and transform it into a Pydantic object that matched with the model spec.
 def parse_restaurant(raw: dict) -> Restaurant:
     name = raw.get("name", "Unknown")
-    cuisines = [c["name"] for c in raw.get("cuisines", []) if "name" in c and c["name"] not in NON_CUISINE_TAGS]
+    cuisines = [c["name"] for c in raw.get("cuisines", []) if "name" in c and c["name"] not in NON_CUISINE_TAGS] # Iterate through and get all the valid cuisine tags
     rating_data = raw.get("rating", {})
     rating = rating_data.get("starRating") if rating_data else None
     address_data = raw.get("address", {})
@@ -28,7 +30,7 @@ def parse_restaurant(raw: dict) -> Restaurant:
         address_data.get("postalCode", ""),
     ]
     address = ", ".join(part for part in address_parts if part)
-    coords = address_data.get("location", {}).get("coordinates")
+    coords = address_data.get("location", {}).get("coordinates") # Store coordinates for use with maps
     latitude = coords[1] if coords and len(coords) == 2 else None
     longitude = coords[0] if coords and len(coords) == 2 else None
     return Restaurant(
@@ -40,7 +42,7 @@ def parse_restaurant(raw: dict) -> Restaurant:
         longitude=longitude,
     )
 
-
+# Asynchronous function to fetch the restaurants.
 async def get_restaurants_by_postcode(postcode: str) -> list[Restaurant]:
     # Normalise to uppercase with a space before validating
     postcode = postcode.strip().upper()
@@ -48,10 +50,12 @@ async def get_restaurants_by_postcode(postcode: str) -> list[Restaurant]:
     # Re-insert space if missing to match with the Gov.uk regex
     if ' ' not in postcode and len(postcode) > 3:
         postcode = postcode[:-3] + ' ' + postcode[-3:]
-
+    
+    # Validate the entered postcode
     if not UK_POSTCODE_REGEX.match(postcode):
         raise ValueError(f"'{postcode}' is not a valid UK postcode")
 
+    # Transform back into valid format for the JET API
     clean_postcode = postcode.replace(" ", "").upper()
     url = f"{JET_API_BASE}/{clean_postcode}"
     async with httpx.AsyncClient() as client:

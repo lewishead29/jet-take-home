@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-
+# Pydantic Model for a restaurant
 class Restaurant(BaseModel):
     name: str
     cuisines: list[str]
