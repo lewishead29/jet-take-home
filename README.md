@@ -1,4 +1,4 @@
-# JET Restaurant Finder
+# JET Take Home
 
 A web application as my submission for the Just Eat Early Careers Software Engineering program. Uses the provided API to search for and return 10 restaurants near a UK postcode.
 
@@ -105,12 +105,39 @@ npm test
 
 ## Assumptions
 
+- Assume that only postcodes are considered valid entries, ignoring outcodes.
 
+- Assume that users are English-speaking as it is a UK based API. No additional language support needed.
+
+- Assume that cuusine tags like 'Collect stamps', 'Deals', 'Cheeky Tuesday' aren't actually cuisines and can be left out.
+
+- Assume that no user authentication is needed.
+
+- Assume that the JET API URL will not change, and the data structure of the responses will remain the same.
+
+- Assume that the starRating is the value that needs to be displayed to the user.
 
 ---
 
 ## Improvements I Would Make
 
+- Improve the UI, for example improving the way that rating stars are rendered so they fill up to the exact rating. E.g. a 3.7 would have three full stars and the fourth star 70% full. I think the general UI is a bit plain so would also have another go at it.
+
+- Add the ability to sort by different values. For example, sort by Rating (High to Low) or vice versa, or from nearest to furthest.
+
+- Add filters, so users are able to only see cuisines they want, or if they want to only see restaurants above a certain rating. This could also be expanded to occur before the API call is made, so 10 relevant results are returned. However, due to the nature of the brief this was not implemented in case it was not what was being looked for.
+
+- Caching could be introduced to reduce redundant calls made to the API for the same postcode.
+
+- Could introduce a way to load more than 10 results and introduce pagination.
+
+- Expand on the HTTP error codes that are currently present.
+
+- Add logos for each company, as CDN links to these are provided in the API response.
+
+- Implement an API to validate postcodes further before sending to the JET API. If a postcode is valid in terms of regex, it could still be a non-existent postcode, so this would reduce redundant calls to the JET API. Royal Mail offer a postcode validation service.
 ---
 
 ## Screenshots
+
+---
